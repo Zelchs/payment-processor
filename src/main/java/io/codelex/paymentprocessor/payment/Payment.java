@@ -1,6 +1,7 @@
 package io.codelex.paymentprocessor.payment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.opencsv.bean.CsvBindByName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,10 +23,12 @@ public class Payment {
 
     @Column
     @NotNull
+    @CsvBindByName(column = "amount")
     private BigDecimal amount;
 
     @Column
     @NotNull
+    @CsvBindByName(column = "debtorIban")
     private String debtorIban;
 
     @Column
