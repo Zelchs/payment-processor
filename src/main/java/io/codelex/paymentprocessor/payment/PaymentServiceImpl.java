@@ -22,4 +22,9 @@ public class PaymentServiceImpl implements PaymentService {
     public List<Payment> getPayments() {
         return paymentRepository.findAll();
     }
+
+    @Override
+    public List<Payment> getPaymentsByDebtorIBAN(String iban) {
+        return paymentRepository.findAllByDebtorIban(iban);
+    }
 }

@@ -6,4 +6,6 @@ public interface PaymentService {
     void savePayment(Payment payment);
 
     List<Payment> getPayments();
+
+    List<Payment> getPaymentsByDebtorIBAN(String iban);
 }

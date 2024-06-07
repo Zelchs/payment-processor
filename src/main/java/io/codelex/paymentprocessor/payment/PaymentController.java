@@ -26,13 +26,13 @@ public class PaymentController {
 
     @PostMapping("payment-files")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCSVPayment(@RequestParam("file") MultipartFile file) {
+    public void uploadCSVPayment(@RequestParam("file") MultipartFile file) {
         csvPaymentService.processCsv(file);
     }
 
     @GetMapping("/payments")
-    public List<Payment> getPayments() {
-        return paymentService.getPayments();
+    public List<Payment> getPayments(@RequestParam(required = false) String debtorIban) {
+        return debtorIban != null ? paymentService.getPaymentsByDebtorIBAN(debtorIban) : paymentService.getPayments();
     }
 
 

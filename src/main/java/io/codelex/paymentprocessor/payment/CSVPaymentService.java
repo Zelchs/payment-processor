@@ -3,11 +3,11 @@ package io.codelex.paymentprocessor.payment;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -22,7 +22,7 @@ public class CSVPaymentService {
     }
 
 
-    public void processCsv(MultipartFile file) throws FileNotFoundException {
+    public void processCsv(MultipartFile file) throws RuntimeException {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             CSVReader csvReader = new CSVReader(br);
 
@@ -30,13 +30,27 @@ public class CSVPaymentService {
                     .withType(Payment.class)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
-
+            @Valid
             List<Payment> payments = csvToBean.parse();
 
-            payments.forEach(paymentService::savePayment);
+            for (Payment payment : payments) {
+                validateAndSavePayment(payment);
+            }
 
         } catch (IOException e) {
-            throw new FileNotFoundException("CSV File Not Found");
+            throw new RuntimeException("CSV File Not Found");
         }
+    }
+
+    private void validateAndSavePayment(Payment payment) {
+        if (isValidPayment(payment)) {
+            paymentService.savePayment(payment);
+        } else {
+            throw new IllegalArgumentException("Invalid payment data in CSV: " + payment);
+        }
+    }
+
+    private boolean isValidPayment(Payment payment) {
+        return payment.isValidDebtorIban() && payment.isValidAmount() && payment.isValidCountry();
     }
 }
