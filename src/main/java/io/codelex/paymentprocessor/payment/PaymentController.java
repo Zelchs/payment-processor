@@ -3,12 +3,9 @@ package io.codelex.paymentprocessor.payment;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 public class PaymentController {
@@ -21,8 +18,12 @@ public class PaymentController {
     @PostMapping("/payments")
     @ResponseStatus(HttpStatus.CREATED)
     public void createPayment(@RequestBody @Valid Payment payment) {
-        payment.setCreationTime(LocalDateTime.now());
         paymentService.savePayment(payment);
+    }
+
+    @GetMapping("/payments")
+    public List<Payment> getPayments() {
+        return paymentService.getPayments();
     }
 
 

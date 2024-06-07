@@ -29,7 +29,7 @@ public class Payment {
     private String debtorIban;
 
     @Column
-    private LocalDateTime creationTime;
+    private LocalDateTime creationTime = LocalDateTime.now();
 
     public Payment() {
         // JPA default constructor
