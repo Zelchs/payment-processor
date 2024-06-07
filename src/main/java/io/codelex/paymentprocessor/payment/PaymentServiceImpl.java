@@ -1,7 +1,10 @@
 package io.codelex.paymentprocessor.payment;
 
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Service
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;

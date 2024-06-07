@@ -1,10 +1,12 @@
 package io.codelex.paymentprocessor.payment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotNull;
 import org.apache.commons.validator.routines.IBANValidator;
 
 import java.math.BigDecimal;
@@ -15,37 +17,39 @@ import java.util.UUID;
 @Entity
 public class Payment {
     @Id
-    @GeneratedValue(generator = "UUID")
+    @GeneratedValue
     private UUID id;
+
     @Column
+    @NotNull
     private BigDecimal amount;
+
     @Column
-    String debtorIban;
+    @NotNull
+    private String debtorIban;
+
+    @Column
     private LocalDateTime creationTime;
 
-
     public Payment() {
-        //JPA default
-    }
-
-    public Payment(BigDecimal amount, String debtorIban) {
-        this.amount = amount;
-        this.debtorIban = debtorIban;
-        this.creationTime = LocalDateTime.now();
+        // JPA default constructor
     }
 
     @AssertTrue
+    @JsonIgnore
     public boolean isValidDebtorIban() {
         IBANValidator validator = IBANValidator.getInstance();
         return validator.isValid(debtorIban);
     }
 
     @AssertTrue
+    @JsonIgnore
     public boolean isValidAmount() {
         return amount.compareTo(BigDecimal.ZERO) > 0;
     }
 
     @AssertTrue
+    @JsonIgnore
     public boolean isValidCountry() {
         return debtorIban.startsWith("LV") || debtorIban.startsWith("EE") || debtorIban.startsWith("LT");
     }
@@ -87,7 +91,10 @@ public class Payment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Payment payment = (Payment) o;
-        return Objects.equals(id, payment.id) && Objects.equals(amount, payment.amount) && Objects.equals(debtorIban, payment.debtorIban) && Objects.equals(creationTime, payment.creationTime);
+        return Objects.equals(id, payment.id) &&
+                Objects.equals(amount, payment.amount) &&
+                Objects.equals(debtorIban, payment.debtorIban) &&
+                Objects.equals(creationTime, payment.creationTime);
     }
 
     @Override
