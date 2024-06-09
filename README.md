@@ -37,13 +37,13 @@ To run the Payment Processor application locally, follow these steps:
 3. Build the application:
 
    ```shell
-   ./mvnw clean package
+   ./gradlew clean build
    ```
 
 4. Run the application:
 
    ```shell
-   java -jar target/payment-processor-0.0.1-SNAPSHOT.jar
+   ./gradlew bootRun
    ```
 
 ## Usage
