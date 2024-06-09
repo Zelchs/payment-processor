@@ -1,6 +1,7 @@
 package io.codelex.paymentprocessor.payment;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,12 @@ public class PaymentController {
 
     @PostMapping("/payments")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createPayment(@RequestBody @Valid Payment payment) {
+    public void createPayment(HttpServletRequest request, @RequestBody @Valid Payment payment) {
+        String ipAddress = request.getHeader("X-FORWARDED-FOR");
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getRemoteAddr();
+        }
+        payment.setDebtorLocation(paymentService.getDebtorLocation(ipAddress));
         paymentService.savePayment(payment);
     }
 

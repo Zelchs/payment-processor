@@ -8,4 +8,6 @@ public interface PaymentService {
     List<Payment> getPayments();
 
     List<Payment> getPaymentsByDebtorIBAN(String iban);
+
+    String getDebtorLocation(String ipAddress);
 }

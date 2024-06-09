@@ -32,6 +32,10 @@ public class Payment {
     private String debtorIban;
 
     @Column
+    @JsonIgnore
+    private String debtorLocation;
+
+    @Column
     private LocalDateTime creationTime = LocalDateTime.now();
 
     public Payment() {
@@ -81,6 +85,14 @@ public class Payment {
         this.debtorIban = debtorIban;
     }
 
+    public String getDebtorLocation() {
+        return debtorLocation;
+    }
+
+    public void setDebtorLocation(String payerCountry) {
+        this.debtorLocation = payerCountry;
+    }
+
     public LocalDateTime getCreationTime() {
         return creationTime;
     }
@@ -94,14 +106,11 @@ public class Payment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Payment payment = (Payment) o;
-        return Objects.equals(id, payment.id) &&
-                Objects.equals(amount, payment.amount) &&
-                Objects.equals(debtorIban, payment.debtorIban) &&
-                Objects.equals(creationTime, payment.creationTime);
+        return Objects.equals(id, payment.id) && Objects.equals(amount, payment.amount) && Objects.equals(debtorIban, payment.debtorIban) && Objects.equals(debtorLocation, payment.debtorLocation) && Objects.equals(creationTime, payment.creationTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, amount, debtorIban, creationTime);
+        return Objects.hash(id, amount, debtorIban, debtorLocation, creationTime);
     }
 }
